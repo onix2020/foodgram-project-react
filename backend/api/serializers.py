@@ -233,7 +233,7 @@ class RecipeSerializer(ModelSerializer):
             bool: True - если рецепт в `избранном`
             у запращивающего пользователя, иначе - False.
         """
-        user = self.context.get('request').user
+        user = self.request.user
         if user.is_anonymous:
             return False
         return user.favorites.filter(id=obj.id).exists()
@@ -248,7 +248,7 @@ class RecipeSerializer(ModelSerializer):
             bool: True - если рецепт в `списке покупок`
             у запращивающего пользователя, иначе - False.
         """
-        user = self.context.get('request').user
+        user = self.request.user
         if user.is_anonymous:
             return False
         return user.carts.filter(id=obj.id).exists()

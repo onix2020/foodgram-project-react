@@ -10,7 +10,7 @@ class AuthorStaffOrReadOnly(permissions.IsAuthenticatedOrReadOnly):
         if request.method in permissions.SAFE_METHODS:
             return True
         
-        return bool (request.user == obj.author or request.user.is_staff)
+        return bool(request.user == obj.author or request.user.is_staff)
 
 
 
