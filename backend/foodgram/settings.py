@@ -112,6 +112,7 @@ DJOSER = {
     'PERMISSIONS': {
         'resipe': ('api.permissions.AuthorStaffOrReadOnly,',),
         'recipe_list': ('api.permissions.AuthorStaffOrReadOnly',),
+        #check it
         'user': ('api.permissions.OwnerUserOrReadOnly',),
         'user_list': ('api.permissions.OwnerUserOrReadOnly',),
     },

@@ -4,6 +4,8 @@ from urllib.parse import unquote
 from django.contrib.auth import get_user_model
 from django.db.models import F, Sum
 from django.http.response import HttpResponse
+#from rest_framework import permissions
+#import from .permissions import IsAuthorOrReadOnlyPermission
 
 from djoser.views import UserViewSet as DjoserUserViewSet
 
@@ -36,6 +38,7 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
     """
     pagination_class = PageLimitPagination
     add_serializer = UserSubscribeSerializer
+    permission_classes = (AuthorStaffOrReadOnly,)
 
     @action(methods=conf.ACTION_METHODS, detail=True)
     def subscribe(self, request, id):
@@ -69,8 +72,8 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
                 Список подписок для авторизованного пользователя.
         """
         user = self.request.user
-        if user.is_anonymous:
-            return Response(status=HTTP_401_UNAUTHORIZED)
+        # if user.is_anonymous:
+        #    return Response(status=HTTP_401_UNAUTHORIZED)
         authors = user.subscribe.all()
         pages = self.paginate_queryset(authors)
         serializer = UserSubscribeSerializer(

@@ -27,8 +27,8 @@ from django.db.models.functions import Length
 CharField.register_lookup(Length)
 
 # fix it
-# User = get_user_model()
-from users.models import MyUser
+User = get_user_model()
+#from users.models import MyUser
 
 class Tag(Model):
     """Тэги для рецептов.
@@ -174,7 +174,7 @@ class Recipe(Model):
         verbose_name='Автор рецепта',
         related_name='recipes',
     # fix it
-        to=MyUser,
+        to=User,
         on_delete=CASCADE,
     )
     favorite = ManyToManyField(
