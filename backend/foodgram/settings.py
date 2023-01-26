@@ -124,7 +124,6 @@ DJOSER = {
 }
 
 LANGUAGE_CODE = 'ru'
-#TIME_ZONE = 'UTC'
 TIME_ZONE = os.getenv('TIME_ZONE')
 USE_I18N = True
 USE_TZ = True
