@@ -1,5 +1,5 @@
 import os
-from pathlib import Path
+#from pathlib import Path
 
 from decouple import Csv, config
 
@@ -10,18 +10,13 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-#SECRET_KEY = config('SECRET_KEY', default='string_from_.env')
+#BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='*')
 #ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
 
-CSRF_TRUSTED_ORIGINS = config(
-    'http://158.160.27.27',
-    default='http://localhost http://127.0.0.1',
-    cast=Csv()
-)
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', default='*')
 
 ROOT_URLCONF = 'foodgram.urls'
 
@@ -73,18 +68,18 @@ TEMPLATES = [
 
 DATABASES = {
     'default': {
-        'ENGINE': config(
+        'ENGINE': os.getenv(
             'DB_ENGINE', default='django.db.backends.postgresql'),
-        'NAME': config(
+        'NAME': os.getenv(
             'DB_NAME', default='postgres'),
-        'USER': config(
+        'USER': os.getenv(
             'POSTGRES_USER', default='postgres'),
-        'PASSWORD': config(
+        'PASSWORD': os.getenv(
             'POSTGRES_PASSWORD', default='postgres'),
-        'HOST': config(
+        'HOST': os.getenv(
             'DB_HOST', default='db'),
-        'PORT': config(
-            'DB_PORT', default=5432, cast=int)
+        'PORT': os.getenv(
+            'DB_PORT', default=5432)
     }
 }
 
@@ -134,10 +129,13 @@ USE_TZ = True
 TIME_ZONE = 'UTC'
 
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / STATIC_URL
+# STATIC_ROOT = BASE_DIR / STATIC_URL
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / MEDIA_URL
+#MEDIA_ROOT = BASE_DIR / MEDIA_URL
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
