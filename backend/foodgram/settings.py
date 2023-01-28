@@ -6,13 +6,15 @@ from decouple import Csv, config
 # Eсли true то будет использована прилагаемая база SQLite c записанными данными
 REVIEW = False
 
+SECRET_KEY = os.getenv('SECRET_KEY')
+
 DEBUG = config('DEBUG', default=True, cast=bool)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 #SECRET_KEY = config('SECRET_KEY', default='string_from_.env')
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='*')
 #ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
 
 CSRF_TRUSTED_ORIGINS = config(
