@@ -4,18 +4,19 @@ from pathlib import Path
 from decouple import Csv, config
 
 # Eсли true то будет использована прилагаемая база SQLite c записанными данными
-REVIEW = 1
+REVIEW = False
 
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG', default=True, cast=bool)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config('SECRET_KEY', default='string_from_.env')
+#SECRET_KEY = config('SECRET_KEY', default='string_from_.env')
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
+ALLOWED_HOSTS = ['*']
+#ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
 
 CSRF_TRUSTED_ORIGINS = config(
-    'CSRF_TRUSTED_ORIGINS',
+    'http://158.160.27.27',
     default='http://localhost http://127.0.0.1',
     cast=Csv()
 )
@@ -77,7 +78,7 @@ DATABASES = {
         'USER': config(
             'POSTGRES_USER', default='postgres'),
         'PASSWORD': config(
-            'POSTGRES_PASSWORD', default='password'),
+            'POSTGRES_PASSWORD', default='postgres'),
         'HOST': config(
             'DB_HOST', default='db'),
         'PORT': config(
@@ -125,9 +126,10 @@ DJOSER = {
 }
 
 LANGUAGE_CODE = 'ru'
-TIME_ZONE = os.getenv('TIME_ZONE')
+#TIME_ZONE = os.getenv('TIME_ZONE')
 USE_I18N = True
 USE_TZ = True
+TIME_ZONE = 'UTC'
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / STATIC_URL
