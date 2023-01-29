@@ -15,7 +15,7 @@ DEBUG = True
 #BASE_DIR = Path(__file__).resolve().parent.parent
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-ALLOWED_HOSTS = ['.localhost', '127.0.0.1', '[::1],', '158.160.21.207']
+ALLOWED_HOSTS = ['.localhost', '127.0.0.1', '[::1],', '158.160.21.207', 'backend']
 #ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
 
 CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', default='*')
