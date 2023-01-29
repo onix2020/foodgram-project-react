@@ -18,7 +18,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ALLOWED_HOSTS = ['.localhost', '127.0.0.1', '[::1],', '158.160.21.207', 'backend']
 #ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
 
-CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', default='*')
+CSRF_TRUSTED_ORIGINS = ['backend','.localhost', '127.0.0.1', '[::1],', '158.160.21.207']
+#CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', default='*')
 
 ROOT_URLCONF = 'foodgram.urls'
 
