@@ -1,7 +1,9 @@
 import os
-#from pathlib import Path
 
 from decouple import Csv, config
+
+#from pathlib import Path
+
 
 # Eсли true то будет использована прилагаемая база SQLite c записанными данными
 REVIEW = False
@@ -79,7 +81,7 @@ DATABASES = {
         'HOST': os.getenv(
             'DB_HOST', default='db'),
         'PORT': os.getenv(
-            'DB_PORT', default=5432)
+            'DB_PORT', default='5432'),
     }
 }
 
@@ -133,7 +135,7 @@ STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = 'media/'
-#MEDIA_ROOT = BASE_DIR / MEDIA_URL
+# MEDIA_ROOT = BASE_DIR / MEDIA_URL
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
