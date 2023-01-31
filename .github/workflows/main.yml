@@ -1,4 +1,4 @@
-name: CI for Foodgram
+name: CI for Foodgram 2
 
 on:
   push:
@@ -36,9 +36,9 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
-          cd projects
-          sudo rm -rf foodgram
-          sudo mkdir -p foodgram
+          cd projects/foodgram
+          #sudo rm -rf foodgram
+          #sudo mkdir -p foodgram
 
   build_push_backend_to_DockerHub:
     name: Building back image and pushing it to Docker Hub
@@ -102,17 +102,16 @@ jobs:
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
           cd projects/foodgram/
-          sudo touch .env
-          sudo echo DEBUG=${{ secrets.DEBUG }} >> .env
-          sudo echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
-          sudo echo ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }} >> .env
-          sudo echo CSRF_TRUSTED_ORIGINS=${{ secrets.CSRF_TRUSTED_ORIGINS }} >> .env
-          sudo echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
-          sudo echo DB_NAME=${{ secrets.DB_NAME }} >> .env
-          sudo echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
-          sudo echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
-          sudo echo DB_HOST=${{ secrets.DB_HOST }} >> .env
-          sudo echo DB_PORT=${{ secrets.DB_PORT }} >> .env
+          touch .env
+          echo DEBUG=${{ secrets.DEBUG }} >> .env
+          echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
+          echo ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }} >> .env
+          echo CSRF_TRUSTED_ORIGINS=${{ secrets.CSRF_TRUSTED_ORIGINS }} >> .env
+          echo DB_NAME=${{ secrets.DB_NAME }} >> .env
+          echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
+          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
+          echo DB_HOST=${{ secrets.DB_HOST }} >> .env
+          echo DB_PORT=${{ secrets.DB_PORT }} >> .env
           sudo docker-compose stop
           sudo docker rm foodgram_frontend_1
           sudo docker rm foodgram_backend_1
