@@ -36,7 +36,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
-          cd projects/foodgram
+          cd foodgram
           #sudo rm -rf foodgram
           #sudo mkdir -p foodgram
 
@@ -101,7 +101,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
-          cd projects/foodgram/
+          #cd foodgram/
           #touch .env
           #echo DEBUG=${{ secrets.DEBUG }} >> .env
           #echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
