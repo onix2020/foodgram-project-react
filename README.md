@@ -100,7 +100,7 @@ sudo docker-compose up -d --build
     - Проект будет доступен по вашему IP
 
 ## Проект в интернете
-Проект запущен и доступен по [адресу](http://http://62.84.123.24/recipes)
+Проект запущен и доступен по [адресу](http://62.84.123.24/recipes)
 user for review: test2@test.com password: asdfvz
 admin for review: kroot password: asdfvz12
 
