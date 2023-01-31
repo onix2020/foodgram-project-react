@@ -38,7 +38,7 @@ jobs:
         script: |
           cd projects
           sudo rm -rf foodgram
-          mkdir -p foodgram
+          sudo mkdir -p foodgram
     - name: Copy files
       uses: garygrossgarten/github-action-scp@release
       with:
