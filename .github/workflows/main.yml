@@ -102,23 +102,23 @@ jobs:
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
           cd projects/foodgram/
-          touch .env
-          echo DEBUG=${{ secrets.DEBUG }} >> .env
-          echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
-          echo ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }} >> .env
-          echo CSRF_TRUSTED_ORIGINS=${{ secrets.CSRF_TRUSTED_ORIGINS }} >> .env
-          echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
-          echo DB_NAME=${{ secrets.DB_NAME }} >> .env
-          echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
-          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
-          echo DB_HOST=${{ secrets.DB_HOST }} >> .env
-          echo DB_PORT=${{ secrets.DB_PORT }} >> .env
-          sudo docker-compose stop
-          sudo docker rm foodgram_frontend_1
-          sudo docker rm foodgram_backend_1
-          sudo docker rmi ${{ secrets.DOCKER_USERNAME }}/foodgram_front
-          sudo docker rmi ${{ secrets.DOCKER_USERNAME }}/foodgram_back
-          sudo docker-compose up -d
+          sudo touch .env
+          sudo echo DEBUG=${{ secrets.DEBUG }} >> .env
+          sudo echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
+          sudo echo ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }} >> .env
+          sudo echo CSRF_TRUSTED_ORIGINS=${{ secrets.CSRF_TRUSTED_ORIGINS }} >> .env
+          sudo echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
+          sudo echo DB_NAME=${{ secrets.DB_NAME }} >> .env
+          sudo echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
+          sudo echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
+          sudo echo DB_HOST=${{ secrets.DB_HOST }} >> .env
+          sudo echo DB_PORT=${{ secrets.DB_PORT }} >> .env
+          sudo sudo docker-compose stop
+          sudo sudo docker rm foodgram_frontend_1
+          sudo sudo docker rm foodgram_backend_1
+          sudo sudo docker rmi ${{ secrets.DOCKER_USERNAME }}/foodgram_front
+          sudo sudo docker rmi ${{ secrets.DOCKER_USERNAME }}/foodgram_back
+          sudo sudo docker-compose up -d
   
   send_message:
     runs-on: ubuntu-latest
