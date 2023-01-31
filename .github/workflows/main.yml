@@ -39,15 +39,6 @@ jobs:
           cd projects
           sudo rm -rf foodgram
           sudo mkdir -p foodgram
-    - name: Copy files
-      uses: garygrossgarten/github-action-scp@release
-      with:
-          local: infra/
-          remote: /${{ secrets.USER }}/projects/foodgram/
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USER }}
-          privateKey: ${{ secrets.SSH_KEY }}
-          passphrase: ${{ secrets.PASSPHRASE }}
 
   build_push_backend_to_DockerHub:
     name: Building back image and pushing it to Docker Hub
