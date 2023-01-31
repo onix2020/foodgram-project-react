@@ -1,33 +1,41 @@
-from rest_framework import permissions
+from rest_framework.permissions import (BasePermission,
+                                        IsAuthenticatedOrReadOnly)
 
 
-class AuthorStaffOrReadOnly(permissions.IsAuthenticatedOrReadOnly):
+class AuthorStaffOrReadOnly(IsAuthenticatedOrReadOnly):
     """
     Разрешение на изменение только для служебного персонала и автора.
     Остальным только чтение объекта.
     """
     def has_object_permission(self, request, view, obj):
-        return bool(request.user == obj.author or request.user.is_staff)
+        return (
+            request.method in ('GET',)
+            or (request.user == obj.author)
+            or request.user.is_staff
+        )
 
 
-class AdminOrReadOnly(permissions.BasePermission):
+class AdminOrReadOnly(BasePermission):
     """
     Разрешение на создание и изменение только для админов.
     Остальным только чтение объекта.
     """
     def has_permission(self, request, view):
         return (
-                request.method in permissions.SAFE_METHODS
-                or request.user.is_authenticated
-                or request.user.is_admin
-            )
+            request.method in ('GET',)
+            or request.user.is_authenticated
+            and request.user.is_admin
+        )
 
 
-class OwnerUserOrReadOnly(permissions.IsAuthenticatedOrReadOnly):
+class OwnerUserOrReadOnly(IsAuthenticatedOrReadOnly):
     """
     Разрешение на изменение только для админа и пользователя.
     Остальным только чтение объекта.
     """
     def has_object_permission(self, request, view, obj):
-        return bool(obj.owner == request.user or request.user.is_admin) 
-
+        return (
+            request.method in ('GET',)
+            or (request.user == obj)
+            or request.user.is_admin
+        )
