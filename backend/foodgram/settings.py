@@ -1,6 +1,6 @@
 import os
 
-from decouple import Csv, config
+#from decouple import Csv, config
 
 #from pathlib import Path
 
@@ -10,15 +10,15 @@ REVIEW = False
 
 SECRET_KEY = "os.getenv('SECRET_KEY')"
 
-DEBUG = True
+DEBUG = False
 
 #BASE_DIR = Path(__file__).resolve().parent.parent
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-ALLOWED_HOSTS = ['.localhost', '127.0.0.1', '[::1],', 'backend', '62.84.123.24']
+ALLOWED_HOSTS = ['.localhost', '127.0.0.1', '[::1],', 'backend', '130.193.34.100']
 #ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*', cast=Csv())
 
-CSRF_TRUSTED_ORIGINS = ['http://backend','http://localhost', 'http://127.0.0.1','http://62.84.123.24']
+CSRF_TRUSTED_ORIGINS = ['http://backend','http://localhost', 'http://127.0.0.1','http://130.193.34.100']
 #CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', default='*')
 
 ROOT_URLCONF = 'foodgram.urls'
