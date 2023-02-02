@@ -36,7 +36,7 @@ class IngredientAdmin(ModelAdmin):
 @register(Recipe)
 class RecipeAdmin(ModelAdmin):
     list_display = (
-        'name', 'author', 'get_image',
+        'name', 'author', 'get_image', 'count_favorites'
     )
     fields = (
         ('name', 'cooking_time',),
@@ -46,10 +46,10 @@ class RecipeAdmin(ModelAdmin):
     )
     raw_id_fields = ('author', )
     search_fields = (
-        'name', 'author__username', 'tags__name'
+        'name', 'author__username', 'tags__name',
     )
     list_filter = (
-        'name', 'author__username',
+        'name', 'author__username', 'tags__name',
     )
 
     inlines = (IngredientInline,)
@@ -60,6 +60,11 @@ class RecipeAdmin(ModelAdmin):
         return mark_safe(f'<img src={obj.image.url} width="80" hieght="30"')
 
     get_image.short_description = 'Изображение'
+
+    def count_favorites(self, obj):
+        return obj.favorite.count()
+    
+    count_favorites.short_description = 'В избранном'
 
 
 @register(Tag)
