@@ -1,9 +1,7 @@
-from datetime import datetime as dt
-from django.conf.locale.ru.formats import DATETIME_FORMAT
 from django.contrib.admin import ModelAdmin, TabularInline, register, site
 from django.utils.safestring import mark_safe
-
-from recipes.models import AmountIngredient, Ingredient, Recipe, Tag, Favorite, Cart
+from recipes.models import (AmountIngredient, Cart, Favorite, Ingredient,
+                            Recipe, Tag)
 
 site.site_header = 'Администрирование Foodgram'
 EMPTY_VALUE_DISPLAY = 'Значение не указано'

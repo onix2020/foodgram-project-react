@@ -5,10 +5,9 @@
 AbstractUser из Django для переопределения полей обязательных для заполнения.
 """
 from api import conf
-
 from django.contrib.auth.models import AbstractUser
-from django.db.models import (CharField, CheckConstraint, EmailField, BooleanField,
-                              ManyToManyField, Q, Model, ForeignKey, UniqueConstraint, CASCADE)
+from django.db.models import (BooleanField, CharField, CheckConstraint,
+                              EmailField, ManyToManyField, Q)
 from django.db.models.functions import Length
 from django.utils.translation import gettext_lazy as _
 

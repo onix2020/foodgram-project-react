@@ -1,25 +1,24 @@
 from datetime import datetime as dt
 from urllib.parse import unquote
+
 from django.contrib.auth import get_user_model
 from django.db.models import F, Sum
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
-#from rest_framework import permissions
-#import from .permissions import IsAuthorOrReadOnlyPermission
-
 from djoser.views import UserViewSet as DjoserUserViewSet
-
-from recipes.models import AmountIngredient, Ingredient, Recipe, Tag, Favorite, Cart
-
+from recipes.models import (AmountIngredient, Cart, Favorite, Ingredient,
+                            Recipe, Tag)
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED, HTTP_201_CREATED, HTTP_204_NO_CONTENT
+from rest_framework.status import (HTTP_201_CREATED, HTTP_204_NO_CONTENT,
+                                   HTTP_400_BAD_REQUEST)
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from . import conf
 from .mixins import AddDelViewMixin
 from .paginators import PageLimitPagination
-from .permissions import AdminOrReadOnly, AuthorStaffOrReadOnly, IsAuthenticated
+from .permissions import (AdminOrReadOnly, AuthorStaffOrReadOnly,
+                          IsAuthenticated)
 from .serializers import (IngredientSerializer, RecipeSerializer,
                           ShortRecipeSerializer, TagSerializer,
                           UserSubscribeSerializer)
@@ -224,7 +223,6 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
             Responce: Статус подтверждающий/отклоняющий действие.
         """
         return self.add_del_obj(recipe_id=pk, m2m_model=Favorite)
-
 
     @action(
         methods=conf.ACTION_METHODS,

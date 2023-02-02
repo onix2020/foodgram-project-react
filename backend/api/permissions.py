@@ -1,9 +1,9 @@
+from rest_framework.permissions import IsAuthenticated  # noqa F401
 from rest_framework.permissions import (BasePermission,
-IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 
 
-class AuthorStaffOrReadOnly(BasePermission):# IsAuthenticatedOrReadOnly):
+class AuthorStaffOrReadOnly(IsAuthenticatedOrReadOnly):
     """
     Разрешение на изменение только для служебного персонала и автора.
     Остальным только чтение объекта.

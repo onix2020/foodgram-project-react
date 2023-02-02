@@ -3,7 +3,6 @@
 """
 
 from django.shortcuts import get_object_or_404
-
 from rest_framework.response import Response
 from rest_framework.status import (HTTP_201_CREATED, HTTP_204_NO_CONTENT,
                                    HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED)
@@ -33,7 +32,7 @@ class AddDelViewMixin:
     add_serializer = None
 
     def add_del_obj(self, recipe_id, m2m_model):
-        """Добавляет/удаляет связь `many-to-many` между пользователем и рецептом.
+        """Добавляет/удаляет связи M2M между пользователеми и рецептами.
 
         Args:
             recipe_id (int):
@@ -62,7 +61,7 @@ class AddDelViewMixin:
 
         if (self.request.method in conf.ADD_METHODS) and not m2m_instance:
             m2m_model(recipe=recipe, user=user).save()
-            return Response(serializer.data, status=201)
+            return Response(serializer.data, status=HTTP_201_CREATED)
 
         if (self.request.method in conf.DEL_METHODS) and m2m_instance:
             m2m_instance[0].delete()

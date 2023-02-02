@@ -4,7 +4,6 @@
 from string import hexdigits
 
 from recipes.models import AmountIngredient
-
 from rest_framework.serializers import ValidationError
 
 
@@ -68,11 +67,11 @@ def check_value_validate(value, klass=None, minimum=None, maximum=None):
         raise ValidationError(
             f'{value} должно содержать цифру'
         )
-    if not minimum is None and int(value) < minimum:
+    if minimum is not None and int(value) < minimum:
         raise ValidationError(
             f'Слишком маленькое значение: {value}'
         )
-    if not maximum is None and int(value) > maximum:
+    if maximum is not None and int(value) > maximum:
         raise ValidationError(
             f'Слишком большое значение: {value}'
         )
@@ -83,7 +82,6 @@ def check_value_validate(value, klass=None, minimum=None, maximum=None):
                 f'{value} не существует'
             )
         return obj[0]
-
 
 
 def is_hex_color(value):
