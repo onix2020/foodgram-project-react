@@ -236,7 +236,7 @@ class RecipeSerializer(ModelSerializer):
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
-        return user.favorites.filter(id=obj.id).exists()
+        return user.favorites.filter(recipe__id=obj.id).exists()
 
     def get_is_in_shopping_cart(self, obj):
         """Проверка - находится ли рецепт в списке  покупок.
@@ -251,7 +251,7 @@ class RecipeSerializer(ModelSerializer):
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
-        return user.carts.filter(id=obj.id).exists()
+        return user.carts.filter(recipe__id=obj.id).exists()
 
     def validate(self, data):
         """Проверка вводных данных при создании/редактировании рецепта.
@@ -285,7 +285,7 @@ class RecipeSerializer(ModelSerializer):
             ingredient = check_value_validate(ing_id, Ingredient)
 
             amount = ing.get('amount')
-            check_value_validate(amount)
+            check_value_validate(amount, minimum=1)
 
             valid_ingredients.append(
                 {'ingredient': ingredient, 'amount': amount}

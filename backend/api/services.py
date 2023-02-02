@@ -28,18 +28,24 @@ def recipe_amount_ingredients_set(recipe, ingredients):
         )
 
 
-def check_value_validate(value, klass=None):
+def check_value_validate(value, klass=None, minimum=None, maximum=None):
     """Проверяет корректность переданного значения.
 
     Если передан класс, проверяет существует ли объект с переданным obj_id.
     При нахождении объекта создаётся Queryset[],
     для дальнейшей работы возвращается первое (и единственное) значение.
+    Если указаны аргументы `minimum` или `maximum`,
+    то переданное значение должно быть приводимым к типу `int`.
 
     Args:
         value (int, str):
             Значение, переданное для проверки.
-        klass(class):
+        klass (class):
             Если значение передано, проверяет наличие объекта с id=value.
+        minimum (int):
+            Минимально допустимое значение.
+        maximum (int):
+            Максимально допустимое значение.
 
     Returns:
         None:
@@ -52,11 +58,23 @@ def check_value_validate(value, klass=None):
             Переданное значение не является числом.
         ValidationError:
             Объекта с указанным id не существует.
+        ValidationError:
+            Слишком маленькое значение.
+        ValidationError:
+            Слишком большое значение.
 
     """
     if not str(value).isdecimal():
         raise ValidationError(
             f'{value} должно содержать цифру'
+        )
+    if not minimum is None and int(value) < minimum:
+        raise ValidationError(
+            f'Слишком маленькое значение: {value}'
+        )
+    if not maximum is None and int(value) > maximum:
+        raise ValidationError(
+            f'Слишком большое значение: {value}'
         )
     if klass:
         obj = klass.objects.filter(id=value)
@@ -65,6 +83,7 @@ def check_value_validate(value, klass=None):
                 f'{value} не существует'
             )
         return obj[0]
+
 
 
 def is_hex_color(value):

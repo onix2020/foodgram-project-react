@@ -1,7 +1,9 @@
+from datetime import datetime as dt
+from django.conf.locale.ru.formats import DATETIME_FORMAT
 from django.contrib.admin import ModelAdmin, TabularInline, register, site
 from django.utils.safestring import mark_safe
 
-from .models import AmountIngredient, Ingredient, Recipe, Tag
+from recipes.models import AmountIngredient, Ingredient, Recipe, Tag, Favorite, Cart
 
 site.site_header = 'Администрирование Foodgram'
 EMPTY_VALUE_DISPLAY = 'Значение не указано'
@@ -46,7 +48,7 @@ class RecipeAdmin(ModelAdmin):
     )
     raw_id_fields = ('author', )
     search_fields = (
-        'name', 'author',
+        'name', 'author__username', 'tags__name'
     )
     list_filter = (
         'name', 'author__username',
@@ -73,3 +75,35 @@ class TagAdmin(ModelAdmin):
 
     save_on_top = True
     empty_value_display = EMPTY_VALUE_DISPLAY
+
+
+@register(Favorite)
+class FavoriteAdmin(ModelAdmin):
+    list_display = (
+        'user', 'recipe', 'date_added'
+    )
+    search_fields = (
+        'user__username', 'recipe__name'
+    )
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+
+@register(Cart)
+class CardAdmin(ModelAdmin):
+    list_display = (
+        'user', 'recipe', 'date_added'
+    )
+    search_fields = (
+        'user__username', 'recipe__name'
+    )
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False

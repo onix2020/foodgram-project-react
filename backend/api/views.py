@@ -1,25 +1,25 @@
 from datetime import datetime as dt
 from urllib.parse import unquote
-
 from django.contrib.auth import get_user_model
 from django.db.models import F, Sum
 from django.http.response import HttpResponse
+from django.shortcuts import get_object_or_404
 #from rest_framework import permissions
 #import from .permissions import IsAuthorOrReadOnlyPermission
 
 from djoser.views import UserViewSet as DjoserUserViewSet
 
-from recipes.models import AmountIngredient, Ingredient, Recipe, Tag
+from recipes.models import AmountIngredient, Ingredient, Recipe, Tag, Favorite, Cart
 
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
+from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED, HTTP_201_CREATED, HTTP_204_NO_CONTENT
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from . import conf
 from .mixins import AddDelViewMixin
 from .paginators import PageLimitPagination
-from .permissions import AdminOrReadOnly, AuthorStaffOrReadOnly
+from .permissions import AdminOrReadOnly, AuthorStaffOrReadOnly, IsAuthenticated
 from .serializers import (IngredientSerializer, RecipeSerializer,
                           ShortRecipeSerializer, TagSerializer,
                           UserSubscribeSerializer)
@@ -40,7 +40,11 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
     add_serializer = UserSubscribeSerializer
     permission_classes = (AuthorStaffOrReadOnly,)
 
-    @action(methods=conf.ACTION_METHODS, detail=True)
+    @action(
+        methods=conf.ACTION_METHODS,
+        detail=True,
+        permission_classes=(IsAuthenticated,)
+    )
     def subscribe(self, request, id):
         """Создаёт/удалет связь между пользователями.
 
@@ -55,9 +59,27 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
         Returns:
             Responce: Статус подтверждающий/отклоняющий действие.
         """
-        return self.add_del_obj(id, conf.SUBSCRIBE_M2M)
+        user = self.request.user
+        author = get_object_or_404(self.queryset, id=id)
+        serializer = self.add_serializer(
+            author, context={'request': self.request}
+        )
+        subscribe_exist = user.subscribe.filter(id=id).exists()
 
-    @action(methods=('get',), detail=False)
+        if (self.request.method in conf.ADD_METHODS) and not subscribe_exist:
+            user.subscribe.add(author)
+            return Response(serializer.data, status=HTTP_201_CREATED)
+
+        if (self.request.method in conf.DEL_METHODS) and subscribe_exist:
+            user.subscribe.remove(author)
+            return Response(status=HTTP_204_NO_CONTENT)
+        return Response(status=HTTP_400_BAD_REQUEST)
+
+    @action(
+        methods=('get',),
+        detail=False,
+        permission_classes=(IsAuthenticated,)
+    )
     def subscriptions(self, request):
         """Список подписок пользоваетеля.
 
@@ -72,8 +94,6 @@ class UserViewSet(DjoserUserViewSet, AddDelViewMixin):
                 Список подписок для авторизованного пользователя.
         """
         user = self.request.user
-        # if user.is_anonymous:
-        #    return Response(status=HTTP_401_UNAUTHORIZED)
         authors = user.subscribe.all()
         pages = self.paginate_queryset(authors)
         serializer = UserSubscribeSerializer(
@@ -124,8 +144,8 @@ class IngredientViewSet(ReadOnlyModelViewSet):
             else:
                 name = name.translate(incorrect_layout)
             name = name.lower()
-            stw_queryset = list(queryset.filter(name__startswith=name))
-            cnt_queryset = queryset.filter(name__contains=name)
+            stw_queryset = list(queryset.filter(name__istartswith=name))
+            cnt_queryset = queryset.filter(name__icontains=name)
             stw_queryset.extend(
                 [i for i in cnt_queryset if i not in stw_queryset]
             )
@@ -173,19 +193,23 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
 
         is_in_shopping = self.request.query_params.get(conf.SHOP_CART)
         if is_in_shopping in conf.SYMBOL_TRUE_SEARCH:
-            queryset = queryset.filter(cart=user.id)
+            queryset = queryset.filter(cart__user=user.id)
         elif is_in_shopping in conf.SYMBOL_FALSE_SEARCH:
-            queryset = queryset.exclude(cart=user.id)
+            queryset = queryset.exclude(cart__user=user.id)
 
         is_favorited = self.request.query_params.get(conf.FAVORITE)
         if is_favorited in conf.SYMBOL_TRUE_SEARCH:
-            queryset = queryset.filter(favorite=user.id)
+            queryset = queryset.filter(favorite__user=user.id)
         if is_favorited in conf.SYMBOL_FALSE_SEARCH:
-            queryset = queryset.exclude(favorite=user.id)
+            queryset = queryset.exclude(favorite__user=user.id)
 
         return queryset
 
-    @action(methods=conf.ACTION_METHODS, detail=True)
+    @action(
+        methods=conf.ACTION_METHODS,
+        detail=True,
+        permission_classes=(IsAuthenticated,)
+    )
     def favorite(self, request, pk):
         """Добавляет/удалет рецепт в `избранное`.
 
@@ -199,9 +223,14 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
         Returns:
             Responce: Статус подтверждающий/отклоняющий действие.
         """
-        return self.add_del_obj(pk, conf.FAVORITE_M2M)
+        return self.add_del_obj(recipe_id=pk, m2m_model=Favorite)
 
-    @action(methods=conf.ACTION_METHODS, detail=True)
+
+    @action(
+        methods=conf.ACTION_METHODS,
+        detail=True,
+        permission_classes=(IsAuthenticated,)
+    )
     def shopping_cart(self, request, pk):
         """Добавляет/удалет рецепт в `список покупок`.
 
@@ -215,7 +244,7 @@ class RecipeViewSet(ModelViewSet, AddDelViewMixin):
         Returns:
             Responce: Статус подтверждающий/отклоняющий действие.
         """
-        return self.add_del_obj(pk, conf.SHOP_CART_M2M)
+        return self.add_del_obj(recipe_id=pk, m2m_model=Cart)
 
     @action(methods=('get',), detail=False)
     def download_shopping_cart(self, request):

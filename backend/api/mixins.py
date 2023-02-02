@@ -32,17 +32,14 @@ class AddDelViewMixin:
 
     add_serializer = None
 
-    def add_del_obj(self, obj_id, meneger):
-        """Добавляет/удаляет связь через менеджер `model.many-to-many`.
-
-        Доступные для работы менеджеры-М2М должны быть внесены в словарь
-        `menegers` откуда будут вызываться в зависимости от переданного ключа.
+    def add_del_obj(self, recipe_id, m2m_model):
+        """Добавляет/удаляет связь `many-to-many` между пользователем и рецептом.
 
         Args:
-            obj_id (int):
-                id обЪекта, с которым требуется создать/удалить связь.
-            meneger (model.ManyRelatedManager):
-                Менеджер указанной модели управляющий требуемой связью.
+            recipe_id (int):
+                id рецепта, с которым требуется создать/удалить связь.
+            m2m_model (Model):
+                М2M модель управляющая требуемой связью.
 
         Returns:
             Responce: Статус подтверждающий/отклоняющий действие.
@@ -56,24 +53,18 @@ class AddDelViewMixin:
         if user.is_anonymous:
             return Response(status=HTTP_401_UNAUTHORIZED)
 
-        menegers = {
-            conf.SUBSCRIBE_M2M: user.subscribe,
-            conf.FAVORITE_M2M: user.favorites,
-            conf.SHOP_CART_M2M: user.carts,
-        }
-        meneger = menegers[meneger]
+        recipe = get_object_or_404(self.queryset, id=recipe_id)
 
-        obj = get_object_or_404(self.queryset, id=obj_id)
         serializer = self.add_serializer(
-            obj, context={'request': self.request}
+            recipe, context={'request': self.request}
         )
-        obj_exist = meneger.filter(id=obj_id).exists()
+        m2m_instance = m2m_model.objects.filter(recipe=recipe_id, user=user)
 
-        if (self.request.method in conf.ADD_METHODS) and not obj_exist:
-            meneger.add(obj)
-            return Response(serializer.data, status=HTTP_201_CREATED)
+        if (self.request.method in conf.ADD_METHODS) and not m2m_instance:
+            m2m_model(recipe=recipe, user=user).save()
+            return Response(serializer.data, status=201)
 
-        if (self.request.method in conf.DEL_METHODS) and obj_exist:
-            meneger.remove(obj)
+        if (self.request.method in conf.DEL_METHODS) and m2m_instance:
+            m2m_instance[0].delete()
             return Response(status=HTTP_204_NO_CONTENT)
         return Response(status=HTTP_400_BAD_REQUEST)
